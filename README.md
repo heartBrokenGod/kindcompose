@@ -11,10 +11,15 @@ make install_all
 
 ### Create development cluster
 ```bash
-make create_development_cluster
+make start
 ```
 
 ### Delete development cluster
 ```bash
-make delete_development_cluster
+make clean
+```
+
+### After starting service in kubernetes run the Create development cluster command again
+```bash
+make start
 ```
