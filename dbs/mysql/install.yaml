@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: database
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+       app: mysql
+    spec:
+      containers:
+      - name: mysql-container
+        image: mysql:latest
+        ports:
+          - containerPort: 3306
+            name: mysqldd
+        resources:
+              requests:
+                   cpu: "1m"
+        env:
+        - name: MYSQL_USER
+          value: devuser
+        - name: MYSQL_ROOT_PASSWORD
+          value: devpassword
+        - name: MYSQL_PASSWORD
+          value: devpassword
+---
+
+# phpmyadmin
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+  namespace: database
+  labels:
+    app: phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phpmyadmin
+  template:
+    metadata:
+      labels:
+       app: phpmyadmin
+    spec:
+      containers:
+      - name: phpmyadmin-container
+        image: phpmyadmin:latest
+        ports:
+          - containerPort: 80
+            name: phpmyadmin
+        resources:
+              requests:
+                   cpu: "1m"
+        env:
+        - name: PMA_ARBITRARY
+          value: "1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: database
+  labels:
+    app: mysql
+spec:
+  type: LoadBalancer
+  ports:
+    - name: service
+      port: 3306
+      protocol: TCP
+      targetPort: 3306
+  selector:
+    app: mysql
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-ui
+  namespace: database
+  labels:
+    app: phpmyadmin
+spec:
+  type: LoadBalancer
+  ports:
+    - name: service
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: phpmyadmin
