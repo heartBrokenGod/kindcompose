@@ -34,5 +34,5 @@ add_service_name_ip_binding:
 remove_service_name_ip_binding:
 	bash cluster/remove_service_name_ip_binding.bash
 
-start: create_development_cluster start_load_balancer install_all_dbs install_istio add_service_name_ip_binding
+start: create_development_cluster start_load_balancer install_all_dbs add_service_name_ip_binding
 clean: remove_service_name_ip_binding stop_load_balancer delete_development_cluster
