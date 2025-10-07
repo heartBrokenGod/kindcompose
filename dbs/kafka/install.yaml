@@ -102,7 +102,7 @@ spec:
         - name: KAFKA_CLUSTERS_0_NAME
           value: local
         - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-          value: kafkai.default.svc.cluster.local:9093
+          value: kafkai.database.svc.cluster.local:9093
   
 ---
 
