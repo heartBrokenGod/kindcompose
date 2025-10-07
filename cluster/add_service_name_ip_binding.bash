@@ -12,7 +12,8 @@ while IFS=$'\t' read -r name ip; do
     if [[ -n "$ip" ]]; then
         services_map["$name"]="$ip"
     fi
-done < <(kubectl get services -o json | jq -r '.items[] | select(.status.loadBalancer.ingress[0].ip) | "\(.metadata.name)\t\(.status.loadBalancer.ingress[0].ip)"')
+done < <(kubectl get services --all-namespaces -o json | jq -r '.items[] | select(.status.loadBalancer.ingress[0].ip) | "\(.metadata.name)\t\(.status.loadBalancer.ingress[0].ip)"')
+
 
 
 # Delete the previous ip mapping to .dev host
@@ -25,7 +26,7 @@ cluster/remove_service_name_ip_binding.bash
 for service_name in "${!services_map[@]}"; do
     external_ip="${services_map[$service_name]}"
     echo "$external_ip dev.$service_name.com" | sudo tee -a /etc/hosts
-    echo "Added $external_ip dev.$service_name.com to /etc/hosts"
+    echo "Added $external_ip http://dev.$service_name.com to /etc/hosts"
 done
 
 echo "Loadbalancer service ip bound to dev.<_SERVICE_NAME_>.com format"
